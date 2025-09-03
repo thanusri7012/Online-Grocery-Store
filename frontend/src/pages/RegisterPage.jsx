@@ -1,23 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../api/axiosConfig';
-import { useAuth } from '../context/AuthContext';
 
-const LoginPage = () => {
+const RegisterPage = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  // Add a class to the body to prevent scrolling
+  useEffect(() => {
+    document.body.classList.add('auth-page');
+    // Cleanup function to remove the class when the component unmounts
+    return () => {
+      document.body.classList.remove('auth-page');
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
-      const { data } = await apiClient.post('/auth/login', { email, password });
-      login(data);
+      await apiClient.post('/auth/register', { name, email, password });
+      navigate('/login'); // Redirect to login after successful registration
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || 'Registration failed');
     }
   };
 
@@ -25,16 +34,28 @@ const LoginPage = () => {
     <div className="split-screen-container">
       <div className="left-panel">
         <div className="left-panel-overlay">
-          <h1>Freshness Delivered</h1>
-          <p>Sign in to continue your journey towards healthy and fresh groceries.</p>
+          <h1>Start Your Journey</h1>
+          <p>Create an account to get the best of fresh, organic groceries delivered to you.</p>
         </div>
       </div>
 
       <div className="right-panel">
         <div className="form-container">
-          <h2 className="text-center mb-4">Welcome Back</h2>
+          <h2 className="text-center mb-4">Create an Account</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
+            <Form.Group className="form-group" controlId="name">
+              <Form.Label className="form-label">Full Name</Form.Label>
+              <Form.Control
+                className="form-control"
+                type="text"
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </Form.Group>
+
             <Form.Group className="form-group" controlId="email">
               <Form.Label className="form-label">Email Address</Form.Label>
               <Form.Control
@@ -52,7 +73,7 @@ const LoginPage = () => {
               <Form.Control
                 className="form-control"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Create a strong password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -60,11 +81,11 @@ const LoginPage = () => {
             </Form.Group>
 
             <Button type="submit" className="w-100 btn-custom mt-3">
-              Sign In
+              Sign Up
             </Button>
             
             <p className="text-center mt-3">
-              Don't have an account? <Link to="/register">Sign Up</Link>
+              Already have an account? <Link to="/login">Sign In</Link>
             </p>
           </Form>
         </div>
@@ -73,4 +94,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

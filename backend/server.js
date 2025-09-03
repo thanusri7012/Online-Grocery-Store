@@ -1,23 +1,32 @@
-// server.js
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import path from 'path'; // Import path module
+import connectDB from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js'; // Import upload route
 
-// Connect to Database
+dotenv.config();
 connectDB();
-
 const app = express();
+app.use(cors());
+app.use(express.json());
 
-// Middlewares
-app.use(cors()); // Allows cross-origin requests
-app.use(express.json()); // Parses incoming JSON requests
-app.use('/uploads', express.static('uploads')); // Serve uploaded files statically
+app.get('/', (req, res) => res.send('API is running...'));
 
-// API Routes
-// app.use('/api/auth', require('./routes/authRoutes'));
-// app.use('/api/products', require('./routes/productRoutes'));
+// --- API Routes ---
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/upload', uploadRoutes); // Use upload route
+
+// --- Make 'uploads' folder static ---
+const __dirname = path.resolve(); // Set __dirname to current directory
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 const PORT = process.env.PORT || 5001;
-
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

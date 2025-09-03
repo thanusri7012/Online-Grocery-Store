@@ -1,0 +1,130 @@
+/* === 1. Global Setup & Imports === */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@500;700&family=Nunito+Sans:wght@400;600;700&display=swap');
+
+:root {
+  --primary-green: #508D4E;
+  --accent-green: #80B918;
+  --background-color: #F9FAF7;
+  --text-dark: #333333;
+  --text-subtle: #6c757d;
+  --border-color: #E0E0E0;
+
+  --font-heading: 'Lora', serif;
+  --font-body: 'Nunito Sans', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--background-color);
+  color: var(--text-dark);
+}
+
+/* Add this class via JS on Login/Register pages to prevent scrolling */
+body.auth-page {
+  overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--primary-green);
+  font-weight: 700;
+}
+
+/* === 2. Custom Component Styles === */
+
+/* Buttons */
+.btn-custom {
+  background-color: var(--accent-green);
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease;
+}
+
+.btn-custom:hover {
+  background-color: #96d427;
+  box-shadow: 0 4px 15px rgba(128, 185, 24, 0.2);
+}
+
+/* Forms */
+.form-container {
+  background-color: #FFFFFF;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 450px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-subtle);
+}
+
+.form-control {
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.form-control:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.25rem rgba(80, 141, 78, 0.2);
+}
+
+/* === 3. Login & Register Page Layout === */
+
+.split-screen-container {
+  display: flex;
+  height: 100vh; /* Use height to fix the screen, not min-height */
+  width: 100%;
+}
+
+.left-panel {
+  flex: 1;
+  background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 40px;
+}
+
+.left-panel-overlay {
+  background-color: rgba(80, 141, 78, 0.6); /* Green overlay */
+  padding: 30px;
+  border-radius: 20px;
+}
+
+.left-panel h1 {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  color: #FFFFFF; /* Override default heading color for visibility */
+}
+
+.left-panel p {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-color);
+  padding: 40px;
+}
