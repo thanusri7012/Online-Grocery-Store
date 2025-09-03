@@ -3,6 +3,7 @@ import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import SearchBox from './SearchBox';
 
 const Header = () => {
   const { userInfo, logout } = useAuth();
@@ -19,7 +20,10 @@ const Header = () => {
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
+            <Nav className="mx-auto">
+              <SearchBox />
+            </Nav>
+            <Nav>
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <i className="fas fa-shopping-cart"></i> Cart
@@ -44,7 +48,6 @@ const Header = () => {
                 </LinkContainer>
               )}
 
-              {/* Admin Menu - Only shows if user is an admin */}
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="Admin" id="adminmenu">
                   <LinkContainer to="/admin/userlist">

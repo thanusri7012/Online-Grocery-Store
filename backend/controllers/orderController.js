@@ -1,8 +1,5 @@
 import Order from '../models/Order.js';
 
-// @desc    Create new order
-// @route   POST /api/orders
-// @access  Private
 const addOrderItems = async (req, res) => {
   try {
     const { orderItems, shippingAddress, paymentMethod, totalPrice } = req.body;
@@ -31,9 +28,6 @@ const addOrderItems = async (req, res) => {
   }
 };
 
-// @desc    Get order by ID
-// @route   GET /api/orders/:id
-// @access  Private
 const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate(
@@ -42,7 +36,6 @@ const getOrderById = async (req, res) => {
     );
 
     if (order) {
-      // Add a check to ensure the user is authorized to see the order
       if (order.user._id.toString() !== req.user._id.toString() && !req.user.isAdmin) {
         return res.status(401).json({ message: 'Not authorized to view this order' });
       }
@@ -56,9 +49,6 @@ const getOrderById = async (req, res) => {
   }
 };
 
-// @desc    Get logged in user's orders
-// @route   GET /api/orders/myorders
-// @access  Private
 const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id });
@@ -69,5 +59,32 @@ const getMyOrders = async (req, res) => {
   }
 };
 
-// This export statement now correctly includes all three defined functions
-export { addOrderItems, getOrderById, getMyOrders };
+const getOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({}).populate('user', 'id name');
+        res.json(orders);
+    } catch (error) {
+        console.error('Error fetching all orders:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+const updateOrderToDelivered = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (order) {
+            order.isDelivered = true;
+            order.deliveredAt = Date.now();
+            const updatedOrder = await order.save();
+            res.json(updatedOrder);
+        } else {
+            res.status(404).json({ message: 'Order not found' });
+        }
+    } catch (error) {
+        console.error('Error updating order to delivered:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+
+export { addOrderItems, getOrderById, getMyOrders, getOrders, updateOrderToDelivered };
